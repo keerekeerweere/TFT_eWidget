@@ -63,8 +63,10 @@ void MeterWidget::analogMeter(uint16_t x, uint16_t y, float startScale, float en
   strncpy(ms4, s4, 4);
 
   // Meter outline
-  ntft->fillRect(x, y, 239, 126, TFT_GREY);
-  ntft->fillRect(x + 5, y + 3, 230, 119, TFT_WHITE);
+//reduce meter size to 160
+
+  ntft->fillRect(x, y, 170, 126, TFT_GREY);
+  ntft->fillRect(x + 5, y + 3, 161, 119, TFT_WHITE);
 
   ntft->setTextColor(TFT_BLACK);  // Text colour
 
@@ -76,17 +78,17 @@ void MeterWidget::analogMeter(uint16_t x, uint16_t y, float startScale, float en
     // Coordinates of tick to draw
     float sx = cos((i - 90) * 0.0174532925);
     float sy = sin((i - 90) * 0.0174532925);
-    uint16_t x0 = x + sx * (100 + tl) + 120;
+    uint16_t x0 = x + sx * (70 + tl) + 84;
     uint16_t y0 = y + sy * (100 + tl) + 140;
-    uint16_t x1 = x + sx * 100 + 120;
+    uint16_t x1 = x + sx * 70 + 84;
     uint16_t y1 = y + sy * 100 + 140;
 
     // Coordinates of next tick for zone fill
     float sx2 = cos((i + 5 - 90) * 0.0174532925);
     float sy2 = sin((i + 5 - 90) * 0.0174532925);
-    int x2 = x + sx2 * (100 + tl) + 120;
+    int x2 = x + sx2 * (70 + tl) + 84;
     int y2 = y + sy2 * (100 + tl) + 140;
-    int x3 = x + sx2 * 100 + 120;
+    int x3 = x + sx2 * 70 + 84;
     int y3 = y + sy2 * 100 + 140;
 
     // Red zone limits
@@ -125,9 +127,9 @@ void MeterWidget::analogMeter(uint16_t x, uint16_t y, float startScale, float en
     if (i % 25 != 0) tl = 8;
 
     // Recalculate coords in case tick length changed
-    x0 = x + sx * (100 + tl) + 120;
+    x0 = x + sx * (70 + tl) + 84;
     y0 = y + sy * (100 + tl) + 140;
-    x1 = x + sx * 100 + 120;
+    x1 = x + sx * 70 + 84;
     y1 = y + sy * 100 + 140;
 
     // Draw tick
@@ -136,7 +138,7 @@ void MeterWidget::analogMeter(uint16_t x, uint16_t y, float startScale, float en
     // Check if labels should be drawn, with position tweaks
     if (i % 25 == 0) {
       // Calculate label positions
-      x0 = x + sx * (100 + tl + 10) + 120;
+      x0 = x + sx * (70 + tl + 10) + 84;
       y0 = y + sy * (100 + tl + 10) + 140;
       switch (i / 25) {
         case -2: ntft->drawCentreString(ms0, x0, y0 - 12, 2); break;
@@ -150,15 +152,15 @@ void MeterWidget::analogMeter(uint16_t x, uint16_t y, float startScale, float en
     // Now draw the arc of the scale
     sx = cos((i + 5 - 90) * 0.0174532925);
     sy = sin((i + 5 - 90) * 0.0174532925);
-    x0 = x + sx * 100 + 120;
+    x0 = x + sx * 70 + 84;
     y0 = y + sy * 100 + 140;
     // Draw scale arc, don't draw the last part
     if (i < 50) ntft->drawLine(x0, y0, x1, y1, TFT_BLACK);
   }
 
-  ntft->drawString(mlabel, x + 5 + 230 - 40, y + 119 - 20, 2); // Units at bottom right
-  ntft->drawCentreString(mlabel, x + 120, y + 70, 4);          // Comment out to avoid font 4
-  ntft->drawRect(x + 5, y + 3, 230, 119, TFT_BLACK);           // Draw bezel line
+  ntft->drawString(mlabel, x + 5 + 161 - 40, y + 119 - 20, 2); // Units at bottom right
+  ntft->drawCentreString(mlabel, x + 84, y + 70, 4);          // Comment out to avoid font 4
+  ntft->drawRect(x + 5, y + 3, 161, 119, TFT_BLACK);           // Draw bezel line
   
   updateNeedle(0, 0);
 }
@@ -198,24 +200,24 @@ void MeterWidget::updateNeedle(float val, uint32_t ms_delay)
     float tx = tan((sdeg + 90) * 0.0174532925);
 
     // Erase old needle image
-    ntft->drawLine(mx + 120 + 20 * ltx - 1, my + 140 - 20, mx + osx - 1, my + osy, TFT_WHITE);
-    ntft->drawLine(mx + 120 + 20 * ltx, my + 140 - 20, mx + osx, my + osy, TFT_WHITE);
-    ntft->drawLine(mx + 120 + 20 * ltx + 1, my + 140 - 20, mx + osx + 1, my + osy, TFT_WHITE);
+    ntft->drawLine(mx + 84 + 20 * ltx - 1, my + 140 - 20, mx + osx - 1, my + osy, TFT_WHITE);
+    ntft->drawLine(mx + 84 + 20 * ltx, my + 140 - 20, mx + osx, my + osy, TFT_WHITE);
+    ntft->drawLine(mx + 84 + 20 * ltx + 1, my + 140 - 20, mx + osx + 1, my + osy, TFT_WHITE);
 
     // Re-plot text under needle
     ntft->setTextColor(TFT_BLACK);
-    ntft->drawCentreString(mlabel, mx + 120, my + 70, 4); // // Comment out to avoid font 4
+    ntft->drawCentreString(mlabel, mx + 84, my + 70, 4); // // Comment out to avoid font 4
 
     // Store new needle end coords for next erase
     ltx = tx;
-    osx = sx * 98 + 120;
-    osy = sy * 98 + 140;
+    osx = sx * 98 + 84;
+    osy = sy * 98 + 161;
 
     // Draw the needle in the new position, magenta makes needle a bit bolder
     // draws 3 lines to thicken needle
-    ntft->drawLine(mx + 120 + 20 * ltx - 1, my + 140 - 20, mx + osx - 1, my + osy, TFT_RED);
-    ntft->drawLine(mx + 120 + 20 * ltx, my + 140 - 20, mx + osx, my + osy, TFT_MAGENTA);
-    ntft->drawLine(mx + 120 + 20 * ltx + 1, my + 140 - 20, mx + osx + 1, my + osy, TFT_RED);
+    ntft->drawLine(mx + 84 + 20 * ltx - 1, my + 140 - 20, mx + osx - 1, my + osy, TFT_RED);
+    ntft->drawLine(mx + 84 + 20 * ltx, my + 140 - 20, mx + osx, my + osy, TFT_MAGENTA);
+    ntft->drawLine(mx + 84 + 20 * ltx + 1, my + 140 - 20, mx + osx + 1, my + osy, TFT_RED);
 
     // Slow needle down slightly as it approaches new position
     if (abs(old_analog - value) < 10) ms_delay += ms_delay / 5;
